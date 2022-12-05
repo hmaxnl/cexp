@@ -50,3 +50,33 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# CMAKE
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+cmake_install.cmake
+CTestTestfile.cmake
+
+# Make
+Makefile
+
+# Build
+Build/
+build/
+BUILD/
+bin/
+BIN/
+lib/
+LIB/
+out/
+
+# IDE
+.vs/
+.vscode/
+.idea/
+.kdev/
+.kdev4/
+*.kdev
+*.kdev4
