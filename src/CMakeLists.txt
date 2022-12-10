@@ -1,5 +1,5 @@
 
-add_executable(ctest
+add_executable(cexp
     "main.c"
     "sockets.h")
 

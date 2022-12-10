@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(ctest LANGUAGES C)
+project(cexp LANGUAGES C)
 
 add_compile_options(-pthread)
 

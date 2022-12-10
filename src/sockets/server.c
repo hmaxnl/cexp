@@ -16,10 +16,7 @@ void* thread_client_handler(void* arg);
 
 int start_server()
 {
-    // Set up data struct that will be send to the client.
-    //char sName[11] = "Server net";
-    //strcpy(server_data.sName, sName);
-
+    printf("   _____                \n  / ____|               \n | |     _____  ___ __  \n | |    / _ \ \/ / '_ \ \n | |___|  __/>  <| |_) |\n  \_____\___/_/\_\ .__/ \n                 | |    \n                 |_|    \n");
     server_sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_sockfd < 0)
     {

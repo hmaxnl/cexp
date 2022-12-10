@@ -1,5 +1,5 @@
 
-target_sources(ctest PRIVATE
+target_sources(cexp PRIVATE
     "client.c"
     "sock_helper.c"
     "server.c"
