@@ -12,9 +12,8 @@ struct net_data
     char sName[100];
 };
 
-void clientstart();
+int clientstart();
 int start_server();
-int stop_server();
 
 
 int writeToSock(int fd, void* data, ssize_t size);

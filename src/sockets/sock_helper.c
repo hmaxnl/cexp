@@ -1,4 +1,5 @@
-#include "../sockets.h"
+#include "cexp.h"
+#include "sockets.h"
 
 int writeToSock(int fd, void* data, ssize_t size)
 {
@@ -9,7 +10,7 @@ int writeToSock(int fd, void* data, ssize_t size)
         dataSizeSend += send(fd, (char*)data + dataSizeSend, size - dataSizeSend, 0);
         if (dataSizeSend == -1)
         {
-            printf("Warning: Cannot send data!\n");
+            TRACE_WARN("Cannot send data!");
             return -1;
         }
     }
@@ -26,7 +27,7 @@ int readFromSock(int fd, void* buff, ssize_t size)
         dataRecv += recv(fd, (char*)buff + dataRecv, size - dataRecv, 0);
         if (dataRecv == -1)
         {
-            printf("Warning: Cannot receive data!\n");
+            TRACE_WARN("Cannot receive data!");
             return -1;
         }
     }

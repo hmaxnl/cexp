@@ -5,10 +5,11 @@
 #include <errno.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include "../sockets.h"
+#include "cexp.h"
+#include "sockets.h"
 
 
-void clientstart()
+int clientstart()
 {
     int client_sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -20,34 +21,34 @@ void clientstart()
     int connection_status = connect(client_sockfd, (struct sockaddr*) &client_sockaddr, sizeof(client_sockaddr));
     if (connection_status != 0)
     {
-        printf("ERROR: Could not connect!\n");
-        return;
+        TRACE_ERROR("Could not connect!");
+        return -1;
     }
 
     ssize_t nextRecSize = 0;
     ssize_t recvRead = readFromSock(client_sockfd, &nextRecSize, sizeof(uint32_t));
     if (recvRead == -1)
     {
-        printf("ERROR: Failed to receive data!\nErrno: %i", errno);
-        return;
+        TRACE_ERROR("Failed to receive data! Errno: %i", errno);
+        return -1;
     }
 
     nextRecSize = ntohl(nextRecSize);
     char serverName[64];
     recvRead = readFromSock(client_sockfd, &serverName, nextRecSize);
     if (recvRead == -1)
-        return;
+        return -1;
     if (recvRead == 0)
     {
-        printf("No data received!\n");
+        PRINT_LINE("No data received!");
     }
 
-    printf("Connected with: %s\n", serverName);
+    PRINT_LINE("Connected with: %s", serverName);
 
     for (;;)
     {
         char c = getchar();
         if (c == 'q')
-            return;
+            return 0;
     }
 }

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "cexp.h"
 #include "thread_manager.h"
 
 int init_thread(int* clientfd, void *(*func) (void *))
@@ -7,10 +8,10 @@ int init_thread(int* clientfd, void *(*func) (void *))
     int thread_create_result = pthread_create(&thread, NULL, func, clientfd);
     if (thread_create_result == -1)
     {
-        printf("ERROR: Could not create thread!\n");
+        TRACE_ERROR("Could not create thread!");
         return thread_create_result;
     }
-    printf("Init thread: %lu\n", thread);
+    PRINT_LINE("Init thread: %lu", thread);
     return 0;
 }
 

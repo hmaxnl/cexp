@@ -3,7 +3,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
-#include "../sockets.h"
+#include "cexp.h"
+#include "sockets.h"
 #include "thread_manager.h"
 
 int server_sockfd;
@@ -16,11 +17,11 @@ void* thread_client_handler(void* arg);
 
 int start_server()
 {
-    printf("   _____                \n  / ____|               \n | |     _____  ___ __  \n | |    / _ \ \/ / '_ \ \n | |___|  __/>  <| |_) |\n  \_____\___/_/\_\ .__/ \n                 | |    \n                 |_|    \n");
+    PRINT_LINE("Starting socket server...");
     server_sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_sockfd < 0)
     {
-        printf("ERROR: Could not create server socket!\n");
+        TRACE_ERROR("Could not create server socket!");
         return -1;
     }
 
@@ -31,32 +32,28 @@ int start_server()
     int bind_result = bind(server_sockfd, (struct sockaddr *) &server_sockaddr, sizeof(server_sockaddr));
     if (bind_result != 0)
     {
-        printf("ERROR: Cannot bind to socket!\n");
+        TRACE_ERROR("Cannot bind to socket!");
         return -1;
     }
 
     while (b_listen)
     {
-        printf("Waiting for a connection...\n");
+        PRINT_LINE("Waiting for a connection...");
         int listen_result = listen(server_sockfd, 1);
         if (listen_result == -1)
         {
-            printf("ERROR: Could not listen. code: %i", errno);
+            TRACE_ERROR("Could not listen. code: %i", errno);
             return -1;
         }
         int clientfd = accept(server_sockfd, NULL, NULL);
         if (clientfd == -1)
         {
-            printf("ERROR: Could not accept client!");
+            TRACE_ERROR("Could not accept client!");
             continue;
         }
         if (init_thread(&clientfd, thread_client_handler) == -1)
-            printf("Warning: Could not establish connection with client!");
+            TRACE_WARN("Could not establish connection with client!");
     }
-    return 0;
-}
-int stop_server()
-{
     return 0;
 }
 
@@ -67,7 +64,7 @@ void* thread_client_handler(void* arg)
     int client_fd = *(int*)arg;
 
     // Send data size to client.
-    ssize_t sNameSize = sizeof(sName);
+    ssize_t sNameSize = strlen(sName);
     uint32_t sDataSize = htonl(sNameSize);
     int sendResult = writeToSock(client_fd, &sDataSize, sizeof(uint32_t));
     if (sendResult == -1)// If we are not be able to send data, return so the thread can exit.
@@ -82,24 +79,24 @@ void* thread_client_handler(void* arg)
     // Wait for command data from client.
     for(;;)
     {
-        printf("Listening to client for data!\n");
+        PRINT_LINE("Listening to client for data...");
         int rec_result;
         rec_result = recv(client_fd, buff, sizeof(buff), 0);
         if (rec_result == -1)
         {
-            printf("Warning: could not recieve data from client!\n");
+            TRACE_WARN("Could not recieve data from client!");
             continue;
         }
 
         if (rec_result == 0)
         {
-            printf("Client disconnected!\n");
+            PRINT_LINE("Client disconnected!");
             break;
         }
     }
 
     int close_result = close(client_fd);
-    printf("Close network result: %i\n", close_result);
+    PRINT_LINE("Close network result: %i", close_result);
     return NULL;
 }
 
