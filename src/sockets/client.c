@@ -9,6 +9,8 @@
 #include "sockets.h"
 
 
+void print_help();
+
 int clientstart()
 {
     int client_sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -48,7 +50,18 @@ int clientstart()
     for (;;)
     {
         char c = getchar();
-        if (c == 'q')
-            return 0;
+        switch (c)
+        {
+            case 'q':
+                return 0;
+            case 'h':
+                print_help();
+                break;
+        }
     }
+}
+void print_help()
+{
+    PRINT_LINE("Usage:");
+    PRINT_LINE("send <string>");
 }

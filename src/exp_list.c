@@ -46,7 +46,7 @@ void print_list_items()
 {
     for (int i = 0; i < list_index_count; i++)
     {
-        PRINT_LINE("%i. %s", i, list[i].name);
+        PRINT_LINE("%i. [%s]", i, list[i].name);
     }
 }
 struct exp_data* get_from_list(int index)

@@ -8,18 +8,25 @@
 
 int checkarg(int argc, char* argv[]);
 int handleoptions();
-static void sig_handler();
+void app_cleanup();
 
 int main(int argc, char *argv[])
 {
+    signal(SIGINT, app_cleanup);
     list_add("Socket server", "sock:server", start_server);
     list_add("Socket client", "sock:client", clientstart);
+    int result;
+
     printf("   _____                \n  / ____|               \n | |     _____  ___ __  \n | |    / _ \\ \\/ / '_ \\ \n | |___|  __/>  <| |_) |\n  \\_____\\___/_/\\_\\ .__/ \n                 | |    \n                 |_|    \n");
-    signal(SIGINT, sig_handler);
-    int argresult = checkarg(argc, argv);
-    if (argresult == 0) // If checkarg returns 0 that means it succesfully handled the argruments.
-        return argresult;
-    return handleoptions(); // If the app does not get args we will display a small options menu.
+
+    // Check for argruments and if we can use them.
+    result = checkarg(argc, argv);
+    if (result == 0)
+        return result;
+    // If the app does not get args we will display a small options menu.
+    result = handleoptions();
+    app_cleanup();
+    return result;
 }
 int checkarg(int argc, char* argv[])
 {
@@ -56,13 +63,13 @@ int handleoptions()
         return -1;
     }
 
-    PRINT_LINE("Option: %s choosen", data->name);
+    PRINT_LINE("Option: [%s] chosen", data->name);
 
     return data->func_ptr != NULL ? data->func_ptr(NULL) : -1;
 }
 
-// Handle the signal to exit the app!
-static void sig_handler()
+// Clean and exit the app.
+void app_cleanup()
 {
     clear_list(); // Clear the exp list.
     exit(0);
